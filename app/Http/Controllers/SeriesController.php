@@ -23,9 +23,12 @@ class SeriesController extends Controller
     }
 
     public function store(Request $request) {
-        $name = $request->input('name');
-        $this->series->name = $name;
-        $this->series->save();
-        return redirect("/series");
+        $this->series::create($request->all());
+        return redirect()->route('series.index');
+    }
+
+    public function destroy(Request $request) {
+        $this->series::destroy($request->id);
+        return redirect()->route('series.index');
     }
 }

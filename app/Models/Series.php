@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Series extends Model
 {
     use HasFactory;
-    protected $fillable = [''];
+    protected $fillable = ['name'];
     protected $table = 'series';
 }
