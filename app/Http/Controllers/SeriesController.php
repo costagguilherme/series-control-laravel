@@ -15,7 +15,7 @@ class SeriesController extends Controller
     }
 
     public function index (Request $request) {
-        $series = $this->series::query()->orderBy('name')->get();
+        $series = $this->series::query()->orderBy('name')->with(['seasons'])->get();
         $messageDeleted = $request->session()->get('message.deleted');
         $messageCreated = $request->session()->get('message.created');
         $messageUpdated = $request->session()->get('message.updated');
@@ -40,6 +40,8 @@ class SeriesController extends Controller
 
     public function edit(Request $request) {
         $serie = $this->series::find($request->id);
+        dd($serie->seasons());
+
         return view('series.edit', ['serie' => $serie]);
     }
 
