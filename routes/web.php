@@ -6,7 +6,7 @@ use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\SeasonsController;
 use App\Http\Controllers\EpisodesController;
 use App\Http\Controllers\LoginController;
-
+use App\Http\Controllers\UsersController;
 use App\Http\Middleware\Authenticator;
 
 
@@ -27,6 +27,9 @@ Route::get('/', function () {
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
+Route::get('/users', [UsersController::class, 'create'])->name('user.create');
+Route::post('/users', [UsersController::class, 'store'])->name('user.store');
+
 
 Route::controller(SeriesController::class)->group(function () {
     Route::get('/series','index')->name('series.index');

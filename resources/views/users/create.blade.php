@@ -1,6 +1,10 @@
-<x-layout title='Login'>
-    <form action="{{route('login.store')}}" method="post">
+<x-layout title='Registrar'>
+    <form action="{{route('user.store')}}" method="post">
         @csrf
+        <div class="form-group">
+            <label for="name" class="form-label">Nome</label>
+            <input type="text" name="name" id="name" class="form-control">
+        </div>
         <div class="form-group">
             <label for="email" class="form-label">Email</label>
             <input type="email" name="email" id="email" class="form-control">
@@ -9,8 +13,6 @@
             <label for="password" class="form-label">Senha</label>
             <input type="password" name="password" id="password" class="form-control">
         </div>
-        <button class="btn btn-primary mt-4 mb-2">Entrar</button>
-        <a href="{{route('user.create')}}" class="btn btn-secondary mt-4 mb-2">Registrar</a>
-
+        <button class="btn btn-primary mt-4 mb-2">Registrar</button>
     </form>
 </x-layout>

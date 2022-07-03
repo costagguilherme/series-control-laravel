@@ -12,8 +12,15 @@ class LoginController
     }
 
     public function store (Request $request) {
-        if (!Auth::attempt($request->all())) {
-            return redirect()->back(403)->withError(['Usuário ou senha inválidos']);
+        if (!Auth::attempt($request->except('_token'))) {
+            return redirect()->back()->withError(['Usuário ou senha inválidos']);
         }
+
+        return redirect()->route('series.index');
+    }
+
+    public function destroy (Request $request) {
+        Auth::logout();
+        return redirect()->route('login');
     }
 }
