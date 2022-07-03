@@ -3,21 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\SeriesFormRequest;
 
 use App\Models\Series;
 use App\Models\Season;
 use App\Models\Episode;
 
+use App\Repositories\EloquenteSeriesRepository;
+use App\Repositories\ISeriesRepository;
+
+
 class SeriesController extends Controller
 {
 
-    public function __construct(Series $series, Season $season, Episode $episode)
+    public function __construct(Series $series, Season $season, Episode $episode, ISeriesRepository $seriesRepository)
     {
         $this->series = $series;
         $this->season = $season;
         $this->episode = $episode;
+        $this->seriesRepository = $seriesRepository;
     }
 
     public function index (Request $request) {
@@ -25,7 +29,6 @@ class SeriesController extends Controller
         $messageDeleted = $request->session()->get('message.deleted');
         $messageCreated = $request->session()->get('message.created');
         $messageUpdated = $request->session()->get('message.updated');
-
         return view('series.index', ['series' => $series, 'messageDeleted' => $messageDeleted, 'messageCreated' => $messageCreated, 'messageUpdated' => $messageUpdated]);
     }
 
@@ -34,34 +37,7 @@ class SeriesController extends Controller
     }
 
     public function store(SeriesFormRequest $request) {
-
-        $serie = DB::transaction(function () use ($request) {
-            
-            $serie = $this->series::create($request->all());
-            $seasons = [];
-            for ($i = 1; $i <= $request->seasons; $i++) {
-                $seasons[] = [
-                    'number' => $i,
-                    'serie_id' => $serie->id
-                ];
-            }
-    
-            $this->season::insert($seasons);
-    
-            $episodes = [];
-            foreach ($serie->seasons as $season) {
-                for ($i = 1; $i <= $request->episodes; $i++) {
-                    $episodes[] = [
-                        'number' => $i,
-                        'season_id' => $season->id
-                    ];
-                }
-            }
-            $this->episode::insert($episodes);
-
-            return $serie;
-        });
-
+        $serie = $this->seriesRepository->add($request);
         return redirect()->route('series.index')->with('message.created', "Série {$serie->name} criada com sucesso");
     }
 
