@@ -9,6 +9,7 @@ class Episode extends Model
 {
     use HasFactory;
     protected $table = 'episodes';
+    protected $fillable = ['number'];
     public $timestamps = false;
 
     

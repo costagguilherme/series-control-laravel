@@ -5,13 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Series;
 use App\Http\Requests\SeriesFormRequest;
+use App\Models\Season;
+use App\Models\Episode;
 
 class SeriesController extends Controller
 {
 
-    public function __construct(Series $series)
+    public function __construct(Series $series, Season $season, Episode $episode)
     {
         $this->series = $series;
+        $this->season = $season;
+        $this->episode = $episode;
     }
 
     public function index (Request $request) {
@@ -29,6 +33,28 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request) {
         $serie = $this->series::create($request->all());
+        $seasons = [];
+        for ($i = 1; $i <= $request->seasons; $i++) {
+            $seasons[] = [
+                'number' => $i,
+                'serie_id' => $serie->id
+            ];
+        }
+
+        $this->season::insert($seasons);
+
+        $episodes = [];
+        foreach ($serie->seasons as $season) {
+            for ($i = 1; $i <= $request->episodes; $i++) {
+                $episodes[] = [
+                    'number' => $i,
+                    'season_id' => $season->id
+                ];
+            }
+        }
+
+        $this->episode::insert($episodes);
+
         return redirect()->route('series.index')->with('message.created', "Série {$serie->name} criada com sucesso");
     }
 

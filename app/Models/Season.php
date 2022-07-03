@@ -10,6 +10,7 @@ class Season extends Model
     use HasFactory;
 
     protected $table = 'seasons';
+    protected $fillable = ['number'];
 
 
     public function serie () {
