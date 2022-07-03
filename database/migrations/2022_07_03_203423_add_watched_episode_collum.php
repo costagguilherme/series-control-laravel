@@ -14,7 +14,7 @@ class AddWatchedEpisodeCollum extends Migration
     public function up()
     {
         Schema::table('episodes', function (Blueprint $table) {
-            //
+            $table->boolean('watched')->default(false);
         });
     }
 
@@ -26,7 +26,7 @@ class AddWatchedEpisodeCollum extends Migration
     public function down()
     {
         Schema::table('episodes', function (Blueprint $table) {
-            //
+            $table->dropColumn('watched');
         });
     }
 }
