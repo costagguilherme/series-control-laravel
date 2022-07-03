@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\SeasonsController;
 use App\Http\Controllers\EpisodesController;
+use App\Http\Controllers\LoginController;
+
+use App\Http\Middleware\Authenticator;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,8 +22,11 @@ use App\Http\Controllers\EpisodesController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return redirect('series');
+})->middleware(Authenticator::class);
+
+Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 
 Route::controller(SeriesController::class)->group(function () {
     Route::get('/series','index')->name('series.index');
