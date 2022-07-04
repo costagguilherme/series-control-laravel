@@ -22,26 +22,35 @@ use App\Http\Middleware\Authenticator;
 */
 
 Route::get('/', function () {
-    return redirect('series');
-})->middleware(Authenticator::class);
+    return redirect()->route('series.index');
+});
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
+
 Route::get('/users', [UsersController::class, 'create'])->name('user.create');
 Route::post('/users', [UsersController::class, 'store'])->name('user.store');
 
 
-Route::controller(SeriesController::class)->group(function () {
-    Route::get('/series','index')->name('series.index');
-    Route::get('/series/create', 'create')->name('series.create');
-    Route::post('/series/store', 'store')->name('series.store');
-    Route::delete('/series/destroy/{id}', 'destroy')->name('series.destroy');
-    Route::get('/series/edit/{id}', 'edit')->name('series.edit');
-    Route::put('/series/update/{id}', 'update')->name('series.update');
+Route::get('/series', [SeriesController::class, 'index'])->name('series.index');
+
+Route::middleware(Authenticator::class)->group(function() {
+
+    Route::get('/logout', [LoginController::class, 'destroy'])->name('logout');
+
+
+    Route::controller(SeriesController::class)->group(function () {
+        Route::get('/series/create', 'create')->name('series.create');
+        Route::post('/series/store', 'store')->name('series.store');
+        Route::delete('/series/destroy/{id}', 'destroy')->name('series.destroy');
+        Route::get('/series/edit/{id}', 'edit')->name('series.edit');
+        Route::put('/series/update/{id}', 'update')->name('series.update');
+    });
+
+
+    Route::get('/series/{id}/seasons', [SeasonsController::class, 'index'])->name('seasons.index');
+    Route::get('/seasons/{id}/episodes', [EpisodesController::class, 'index'])->name('episodes.index');
+    Route::put('/seasons/{id}/episodes', [EpisodesController::class, 'update'])->name('episodes.update');
+
 });
 
-
-Route::get('/series/{id}/seasons', [SeasonsController::class, 'index'])->name('seasons.index');
-
-Route::get('/seasons/{id}/episodes', [EpisodesController::class, 'index'])->name('episodes.index');
-Route::put('/seasons/{id}/episodes', [EpisodesController::class, 'update'])->name('episodes.update');

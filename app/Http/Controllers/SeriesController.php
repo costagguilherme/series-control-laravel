@@ -49,8 +49,6 @@ class SeriesController extends Controller
 
     public function edit(Request $request) {
         $serie = $this->series::find($request->id);
-        dd($serie->seasons());
-
         return view('series.edit', ['serie' => $serie]);
     }
 
