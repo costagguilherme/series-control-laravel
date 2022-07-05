@@ -8,6 +8,7 @@ use App\Http\Controllers\EpisodesController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UsersController;
 use App\Http\Middleware\Authenticator;
+use App\Mail\SeriesCreated;
 
 
 /*
@@ -23,6 +24,10 @@ use App\Http\Middleware\Authenticator;
 
 Route::get('/', function () {
     return redirect()->route('series.index');
+});
+
+Route::get('/email', function () {
+    return new SeriesCreated('Série', 1, 4, 5);
 });
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
