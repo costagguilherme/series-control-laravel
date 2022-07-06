@@ -10,6 +10,8 @@ use App\Http\Requests\SeriesFormRequest;
 use App\Models\Series;
 use App\Models\Season;
 use App\Models\Episode;
+use App\Models\User;
+
 
 use App\Mail\SeriesCreated;
 
@@ -20,12 +22,13 @@ use App\Repositories\ISeriesRepository;
 class SeriesController extends Controller
 {
 
-    public function __construct(Series $series, Season $season, Episode $episode, ISeriesRepository $seriesRepository)
+    public function __construct(Series $series, Season $season, Episode $episode, User $user, ISeriesRepository $seriesRepository)
     {
         $this->series = $series;
         $this->season = $season;
         $this->episode = $episode;
         $this->seriesRepository = $seriesRepository;
+        $this->user = $user;
     }
 
     public function index (Request $request) {
@@ -41,9 +44,13 @@ class SeriesController extends Controller
     }
 
     public function store(SeriesFormRequest $request) {
+        $users = $this->user::all();
         $serie = $this->seriesRepository->add($request);
-        $email = new SeriesCreated($serie->name, (int)$request->id, (int)$request->seasons, (int)$request->episodes);
-        Mail::to($request->user())->send($email);
+        // Enviando e-mail para os usuários quando uma série é criada
+        foreach($users as $user) {
+            $email = new SeriesCreated($serie->name, (int)$request->id, (int)$request->seasons, (int)$request->episodes);
+            Mail::to($user)->queue($email);
+        }
         return redirect()->route('series.index')->with('message.created', "Série {$serie->name} criada com sucesso");
     }
 
