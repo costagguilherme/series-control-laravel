@@ -17,7 +17,7 @@ class CreateSeasonsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('serie_id');
             $table->unsignedTinyInteger('number');
-            $table->foreign('serie_id')->references('id')->on('series');
+            $table->foreign('serie_id')->references('id')->on('series')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

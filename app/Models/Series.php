@@ -12,6 +12,6 @@ class Series extends Model
     protected $table = 'series';
 
     public function seasons () {
-        return $this->hasMany(Season::class, 'serie_id', 'id');
+        return $this->hasMany(Season::class, 'serie_id');
     }
 }

@@ -17,7 +17,7 @@ class CreateEpisodesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('season_id');
             $table->unsignedTinyInteger('number');
-            $table->foreign('season_id')->references('id')->on('seasons');
+            $table->foreign('season_id')->references('id')->on('seasons')->constrained()->onDelete('cascade');
         });
     }
 

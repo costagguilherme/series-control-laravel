@@ -11,7 +11,7 @@ class Episode extends Model
 {
     use HasFactory;
     protected $table = 'episodes';
-    protected $fillable = ['number', 'watched'];
+    protected $fillable = ['number'];
     public $timestamps = false;
 
     
