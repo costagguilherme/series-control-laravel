@@ -24,7 +24,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         NewUserEvent::class => [
             SendMailForNewUser::class,
-            // LogNewUser::class
+            LogNewUser::class
         ]
     ];
 
