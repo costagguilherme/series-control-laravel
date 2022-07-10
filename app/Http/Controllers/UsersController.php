@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Events\NewUserEvent;
+use App\Jobs\NewUserJob;
 
 use App\Models\User;
 
@@ -21,7 +22,8 @@ class UsersController extends Controller
         $data = $request->except(['_token']);
         $data['password'] = Hash::make($data['password']);
         $user = User::create($data);
-        NewUserEvent::dispatch($user->name, $user->email, $user->id);
+        // NewUserEvent::dispatch($user->name, $user->email, (int) $user->id);
+        NewUserJob::dispatch($user->name, $user->email, (int) $user->id);
         Auth::login($user);
         return redirect()->route('series.index');
     }
