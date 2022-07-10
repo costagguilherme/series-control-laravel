@@ -12,9 +12,6 @@ use App\Models\Season;
 use App\Models\Episode;
 use App\Models\User;
 
-
-use App\Mail\SeriesCreated;
-
 use App\Repositories\EloquenteSeriesRepository;
 use App\Repositories\ISeriesRepository;
 
@@ -44,13 +41,7 @@ class SeriesController extends Controller
     }
 
     public function store(SeriesFormRequest $request) {
-        $users = $this->user::all();
-        $serie = $this->seriesRepository->add($request);
-        // Enviando e-mail para os usuários quando uma série é criada
-        foreach($users as $user) {
-            $email = new SeriesCreated($serie->name, (int)$request->id, (int)$request->seasons, (int)$request->episodes);
-            Mail::to($user)->queue($email);
-        }
+        $serie = $this->seriesRepository->add($request);        
         return redirect()->route('series.index')->with('message.created', "Série {$serie->name} criada com sucesso");
     }
 
