@@ -41,7 +41,10 @@ class SeriesController extends Controller
     }
 
     public function store(SeriesFormRequest $request) {
-        $coverPath = $request->file('cover')->store('series_cover', 'public');
+        $coverPath = $request->hasFile('cover') 
+        ? $request->file('cover')->store('series_cover', 'public') 
+        : null;
+
         $request->coverPath = $coverPath;
         $serie = $this->seriesRepository->add($request);        
         return redirect()->route('series.index')->with('message.created', "Série {$serie->name} criada com sucesso");
